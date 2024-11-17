@@ -1,4 +1,5 @@
 using FluentAssertions;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using System.Drawing;
 using TagsCloudVisualization;
@@ -18,11 +19,25 @@ namespace CircularCloudLayouterTests
             CCL = new CircularCloudLayouter(new Point(100,100));
         }
 
+        [TearDown]
+        public void Teardown() 
+        {
+            var testResult = TestContext.CurrentContext.Result.Outcome;
+            var testName = TestContext.CurrentContext.Test.Name;
+            if (Equals(testResult, ResultState.Failure) ||
+                Equals(testResult == ResultState.Error))
+            {
+                var drawer = new ImageCreater(CCL.Center.X * 2, CCL.Center.Y * 2);
+                var directory = AppDomain.CurrentDomain.BaseDirectory + $"FailedTestTagCloud.{testName}.jpeg";
+                drawer.Generate(CCL.Rectangles, directory);
+                Console.WriteLine($"Tag cloud visualization saved to file {directory}");
+            }
+        }
+
         [Test]
         public void CircularCloudLayouter_Constructor_CorrectlySetCenter()
         {
-            var ccl = new CircularCloudLayouter(new Point(200,200));
-            ccl.Center.Should().Be(new Point(200,200));
+            CCL.Center.Should().Be(new Point(100,100));
         }
 
         [Test]

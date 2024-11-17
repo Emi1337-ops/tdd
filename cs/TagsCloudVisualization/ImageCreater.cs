@@ -21,7 +21,7 @@ namespace TagsCloudVisualization
             Height = height;
         }
 
-        public void Generate(IEnumerable<Rectangle> items)
+        public void Generate(IEnumerable<Rectangle> items, string directory)
         {
             var image = new Bitmap(Width, Height);
             var g = Graphics.FromImage(image);
@@ -32,8 +32,9 @@ namespace TagsCloudVisualization
                 count++;
                 g.DrawRectangle(pen, item);
             }
-                
-            image.Save(AppDomain.D + "\\tagCloud.jpeg", ImageFormat.Jpeg);
+
+            image.Save(directory, ImageFormat.Jpeg);
+            
         }
     }
 }
